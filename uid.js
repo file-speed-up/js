@@ -1,1 +1,43 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('2 4={h:5(){2 r=8 9().e();2 t=8 9();2 u=8 9(t.B()).e()-1;2 x=r-u;2 w=C*b*b*q-x;7 w},k:5(n,v,c){2 6=8 9()6.D(6.e()+c);l.4=n+"="+F(v)+((c==E)?"":";z="+6.A())},m:5(n){2 o=/\\s/g;2 p=l.4.N(o,"");2 f=p.j(";");P(2 i=0;i<f.Q;i++){2 d=f[i].j("=");M(d[0]==n){7 d[1]}}}};2 a=5(){5 3(){7(((1+L.G())*H)|0).O(J).K(1)}7(3()+3()+3()+3()+3()+3()+3()+3())};I.y(4.h()/ q /b/b);!4.m(\'a\')&&4.k(\'a\',a(),4.h());',53,53,'||var|S4|cookie|function|date|return|new|Date|guid|60|exp|nameArr|getTime|resultArr||leftTime||split|setCookie|document|getCookie||reg|result|1000|curTamp||curDate|curWeeHours||leftTamp|passedTamp|log|expires|toGMTString|toLocaleDateString|24|setTime|null|escape|random|0x10000|console|16|substring|Math|if|replace|toString|for|length'.split('|'),0,{}))
+var cookie = {
+    //milliseconds remaining today
+    leftTime: function() {
+        var curTamp = new Date().getTime();
+        var curDate = new Date(); //191223 added
+        //The time stamp of the early morning of the day, minus one millisecond is to prevent the state that the subsequent time will not reach 00:00:00
+        var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
+        var passedTamp = curTamp - curWeeHours;
+        var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
+        return leftTamp;
+    },
+    //n: key name, v: key value, exp: expiration time (ms)
+    setCookie: function(n, v, exp) {
+        var date = new Date()
+        date.setTime(date.getTime() + exp);
+        document.cookie = n + "=" + escape(v) +
+            ((exp == null) ? "" : ";expires=" + date.toGMTString())
+    },
+    //n is the key name of the key value you want to get
+    getCookie: function(n) {
+        var reg = /\s/g;
+        var result = document.cookie.replace(reg, "");
+        var resultArr = result.split(";");
+        for (var i = 0; i < resultArr.length; i++) {
+            var nameArr = resultArr[i].split("=");
+            if (nameArr[0] == n) {
+                return nameArr[1];
+            }
+        }
+    }
+};
+  
+//generate the guid
+var guid = function() {
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4());
+};
+  
+//If the guid does not exist, then generate the guid
+console.log(cookie.leftTime() / 1000 / 60 /60);
+!cookie.getCookie('guid') && cookie.setCookie('guid', guid(), cookie.leftTime());
